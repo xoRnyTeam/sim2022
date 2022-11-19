@@ -1,8 +1,8 @@
 #ifndef ELF_LOADER_H
 #define ELF_LOADER
 
-#include "memory.hpp"
-#include "utils.hpp"
+#include "memory/memory.hpp"
+#include "support.hpp"
 
 #include <elfio/elfio.hpp>
 
