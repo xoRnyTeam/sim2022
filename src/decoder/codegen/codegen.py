@@ -26,7 +26,9 @@ class CodeGen():
         self.yaml_gen(self.decoder_src.joinpath(Path("codegen", "risc-v_tree.yaml")))
         self.decoder_gen(self.decoder_src.joinpath(Path("decoder.cpp")))
         self.isa_gen(self.project_path.joinpath(Path("include", "isa", "isa.hpp")))
-        self.exec_gen(self.project_path.joinpath(Path("src", "executor", "executor.cpp")))
+
+        # NOTE: it should be commented due handwrited exec_{mn} funcs
+        # self.exec_gen(self.project_path.joinpath(Path("src", "executor", "executor.cpp")))
         #
     #
     def exec_gen(self, path : Path):
@@ -40,14 +42,17 @@ class CodeGen():
             #
             for it in self._instructions:
                 print(open_scope(f"void exec_{it.mn}(Instruction& instr)"), file=cpp)
+                # NOTE: execution realization
                 print(close_scope(), file=cpp)
             #
-            print(open_scope(f"Executor::Executor()"), file=cpp, end='')
+            print(f"Executor::Executor() : ", file=cpp, end='')
+            print(f"m_exec_instr{{", file=cpp)
             #
             for it in self._instructions:
-                print(f"m_exec_instr.insert(std::make_pair(InstrId::{it.mn}, exec_{it.mn}));", file=cpp)
+                print(f"{{InstrId::{it.mn}, exec_{it.mn}}},", file=cpp)
             #
-            print(close_scope(), file=cpp, end='')
+            print(f"}} {{}}", file=cpp)
+            #
             print(close_scope("namespace sim"), file=cpp)
         #
     #

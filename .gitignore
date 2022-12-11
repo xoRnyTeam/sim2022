@@ -35,3 +35,7 @@
 
 build/
 .vscode/
+
+# Auto gen files
+
+decoder.cpp
