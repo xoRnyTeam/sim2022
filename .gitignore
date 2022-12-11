@@ -39,3 +39,7 @@ build/
 # Auto gen files
 
 decoder.cpp
+
+# Python
+
+__pycache__/
