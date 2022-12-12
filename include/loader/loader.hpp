@@ -9,7 +9,15 @@
 namespace sim {
 
 struct ElfLoader final {
-  static paddress_t loadELF(Memory *memory, const std::string &filepath);
+
+  ELFIO::elfio m_reader{};
+
+  ElfLoader(const std::string &filepath);
+  //
+public:
+  paddress_t load(Memory *memory, const std::string &filepath);
+  //
+  paddress_t get_entry() const { return m_reader.get_entry(); }
 };
 
 }; // namespace sim
