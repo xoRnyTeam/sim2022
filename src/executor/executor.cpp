@@ -5,9 +5,13 @@
 
 namespace sim {
 
-void exec_ADD(Instruction &instr, Hart &hart) {} //!
+void exec_ADD(Instruction &instr, Hart &hart) {
+  hart.setReg(instr.rd, instr.rs1 + instr.rs2);
+} //!
 
-void exec_ADDI(Instruction &instr, Hart &hart) {} //!
+void exec_ADDI(Instruction &instr, Hart &hart) {
+  hart.setReg(instr.rd, instr.imm + instr.rs1);
+} //!
 
 void exec_AND(Instruction &instr, Hart &hart) {} //!
 
@@ -29,7 +33,7 @@ void exec_BNE(Instruction &instr, Hart &hart) {} //!
 
 void exec_EBREAK(Instruction &instr, Hart &hart) {} //!
 
-void exec_ECALL(Instruction &instr, Hart &hart) {} //!
+void exec_ECALL(Instruction &instr, Hart &hart) { hart.setTerminate(); } //!
 
 void exec_FENCE(Instruction &instr, Hart &hart) {} //!
 
@@ -49,7 +53,11 @@ void exec_LHU(Instruction &instr, Hart &hart) {} //!
 
 void exec_LUI(Instruction &instr, Hart &hart) {} //!
 
-void exec_LW(Instruction &instr, Hart &hart) {} //!
+void exec_LW(Instruction &instr, Hart &hart) {
+  vaddress_t address = instr.rs1 + instr.imm;
+  word_t value = hart.memory.readWord(address);
+  hart.setReg(instr.rd, value);
+} //!
 
 void exec_OR(Instruction &instr, Hart &hart) {} //!
 
@@ -79,9 +87,15 @@ void exec_SRA(Instruction &instr, Hart &hart) {} //!
 
 void exec_SRL(Instruction &instr, Hart &hart) {} //!
 
-void exec_SUB(Instruction &instr, Hart &hart) {} //!
+void exec_SUB(Instruction &instr, Hart &hart) {
+  hart.setReg(instr.rd, instr.rs1 - instr.rs2);
+} //!
 
-void exec_SW(Instruction &instr, Hart &hart) {} //!
+void exec_SW(Instruction &instr, Hart &hart) {
+  vaddress_t address = instr.rs1 + instr.imm;
+  word_t value = hart.getReg(instr.rs2);
+  hart.memory.writeWord(address, value);
+} //!
 
 void exec_XOR(Instruction &instr, Hart &hart) {} //!
 

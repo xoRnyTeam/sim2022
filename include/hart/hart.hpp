@@ -11,14 +11,19 @@
 namespace sim {
 
 /**
- * @brief 
- * 
+ * @brief
+ *
  */
 struct Hart {
   paddress_t pc{};
   std::array<reg_val_t, RegNum> regs{};
-  bool termiante = false;
+  bool terminate = false;
   Memory memory{};
+
+  void setReg(reg_id_t reg, reg_val_t val);
+  reg_val_t getReg(reg_id_t reg) const;
+  /// @brief Set terminate flag true
+  void setTerminate() { terminate = true; }
 };
 
 } // namespace sim

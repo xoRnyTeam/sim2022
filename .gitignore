@@ -39,6 +39,7 @@ build/
 # Auto gen files
 
 decoder.cpp
+risc-v_tree.yaml
 
 # Python
 

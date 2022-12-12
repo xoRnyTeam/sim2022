@@ -33,7 +33,7 @@ public:
 private:
   //
   paddress_t &pc() { return m_hart.pc; }
-  bool is_terminate() { return m_hart.termiante; }
+  bool is_terminate() { return m_hart.terminate; }
   //
 };
 } // namespace sim
