@@ -1,7 +1,13 @@
 cmake_minimum_required(VERSION 3.16)
 project(sim2022)
 
-include(cmake/subdirs.cmake)
+# include(cmake/subdirs.cmake)
+set(CMAKE_INCL subdirs flags)
+#
+foreach(INCL ${CMAKE_INCL})
+  include(cmake/${INCL}.cmake)
+endforeach()
+#
 
 set(DIRS 3rd_party src sim)
 
@@ -10,12 +16,17 @@ foreach(DIR ${DIRS})
 endforeach()
 
 set(TARGETS)
-list(APPEND TARGETS ${SIMLIB})
+list(APPEND TARGETS ${SIM} ${SIMLIB})
 
 foreach(TARGET IN LISTS TARGETS)
   target_include_directories(${TARGET} PRIVATE ${CMAKE_SOURCE_DIR}/include)
   target_include_directories(${TARGET} PRIVATE ${CMAKE_SOURCE_DIR}/3rd_party/ELFIO)
 
-  target_compile_options(${TARGET} PRIVATE -Wall -Wextra -Wpedantic)
+  # target_compile_options(${TARGET} PRIVATE -Wall -Wextra -Wpedantic)
+  apply_compiler_flags(${TARGET} PRIVATE)
   target_compile_features(${TARGET} PRIVATE cxx_std_17)
+endforeach()
+
+foreach(TARGET ${SIM})
+  target_link_libraries(${TARGET} PRIVATE ${SIMLIB})
 endforeach()
