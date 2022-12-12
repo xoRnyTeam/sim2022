@@ -15,7 +15,7 @@ struct ElfLoader final {
   ElfLoader(const std::string &filepath);
   //
 public:
-  paddress_t load(Memory *memory, const std::string &filepath);
+  paddress_t load(Memory &memory);
   //
   paddress_t get_entry() const { return m_reader.get_entry(); }
 };

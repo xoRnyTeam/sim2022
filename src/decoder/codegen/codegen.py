@@ -41,7 +41,7 @@ class CodeGen():
             print(open_scope("namespace sim"), file=cpp, end='')
             #
             for it in self._instructions:
-                print(open_scope(f"void exec_{it.mn}(Instruction& instr)"), file=cpp)
+                print(open_scope(f"void exec_{it.mn}(Instruction& instr, Hart& hart)"), file=cpp)
                 # NOTE: execution realization
                 print(close_scope(), file=cpp)
             #
@@ -103,15 +103,16 @@ class CodeGen():
 
         with open(path, "w") as cpp:
             print(include("isa/instr"), file=cpp)
+            print(include("decoder/decoder"), file=cpp)
 
             print(open_scope("namespace sim"), file=cpp)
-            print(open_scope("Instruction decode(word_t word)"), file=cpp)
+            print(open_scope("Instruction Decoder::decode(word_t word)"), file=cpp)
             print("  Instruction instr{};", file=cpp)
 
             for str in self._tree._decode_code:
                 print(str, file=cpp)
 
-            print(close_scope("namespace sim"), file=cpp)
+            print(close_scope(), file=cpp)
             print(close_scope(), file=cpp)
     #
 #

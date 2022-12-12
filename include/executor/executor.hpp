@@ -2,6 +2,7 @@
 #define EXEC_HPP
 
 #include "isa/instr.hpp"
+#include "hart/hart.hpp"
 //
 #include <functional>
 #include <unordered_map>
@@ -11,7 +12,7 @@ namespace sim {
 
 class Executor final {
   //
-  std::unordered_map<InstrId, std::function<void(Instruction &instr)>>
+  std::unordered_map<InstrId, std::function<void(Instruction &instr, Hart& hart)>>
       m_exec_instr{};
   //
 public:
@@ -21,7 +22,7 @@ public:
   Executor &operator=(const Executor &) = delete;
   Executor &operator=(Executor &&) = delete;
   //
-  void exec(Instruction &instr) const;
+  void exec(Instruction &instr, Hart &hart) const { m_exec_instr.at(instr.id)(instr, hart); }
 };
 
 } // namespace sim

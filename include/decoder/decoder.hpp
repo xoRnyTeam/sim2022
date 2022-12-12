@@ -10,12 +10,6 @@ class Decoder final {
 
 public:
   Instruction decode(word_t word);
-  //
-  Decoder();
-  Decoder(const Decoder &) = delete;
-  Decoder(Decoder &&) = delete;
-  Decoder &operator=(const Decoder &) = delete;
-  Decoder &operator=(Decoder &&) = delete;
 };
 
 } // namespace sim

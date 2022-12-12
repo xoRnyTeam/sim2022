@@ -20,6 +20,13 @@ public:
   void writeRaw(paddress_t addr, const byte_t *src, size_t nbytes);
   /// @brief Read \p nbytes bytes from physical address \p addr to dst pointer
   void readRaw(paddress_t addr, byte_t *dst, size_t nbytes) const;
+
+  /// @brief 
+  /// @param addr 
+  /// @param dst 
+  /// @param nbytes 
+  word_t readWord(paddress_t addr) const;
+
   /// @brief Fill memory with value
   void memfill(paddress_t addr, byte_t val, size_t nbytes);
 };
