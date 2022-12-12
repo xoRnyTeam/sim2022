@@ -1,90 +1,91 @@
 
 #include "executor/executor.hpp"
+
 #include "isa/instr.hpp"
 
 namespace sim {
 
-void exec_ADD(Instruction &instr) {} //!
+void exec_ADD(Instruction &instr, Hart &hart) {} //!
 
-void exec_ADDI(Instruction &instr) {} //!
+void exec_ADDI(Instruction &instr, Hart &hart) {} //!
 
-void exec_AND(Instruction &instr) {} //!
+void exec_AND(Instruction &instr, Hart &hart) {} //!
 
-void exec_ANDI(Instruction &instr) {} //!
+void exec_ANDI(Instruction &instr, Hart &hart) {} //!
 
-void exec_AUIPC(Instruction &instr) {} //!
+void exec_AUIPC(Instruction &instr, Hart &hart) {} //!
 
-void exec_BEQ(Instruction &instr) {} //!
+void exec_BEQ(Instruction &instr, Hart &hart) {} //!
 
-void exec_BGE(Instruction &instr) {} //!
+void exec_BGE(Instruction &instr, Hart &hart) {} //!
 
-void exec_BGEU(Instruction &instr) {} //!
+void exec_BGEU(Instruction &instr, Hart &hart) {} //!
 
-void exec_BLT(Instruction &instr) {} //!
+void exec_BLT(Instruction &instr, Hart &hart) {} //!
 
-void exec_BLTU(Instruction &instr) {} //!
+void exec_BLTU(Instruction &instr, Hart &hart) {} //!
 
-void exec_BNE(Instruction &instr) {} //!
+void exec_BNE(Instruction &instr, Hart &hart) {} //!
 
-void exec_EBREAK(Instruction &instr) {} //!
+void exec_EBREAK(Instruction &instr, Hart &hart) {} //!
 
-void exec_ECALL(Instruction &instr) {} //!
+void exec_ECALL(Instruction &instr, Hart &hart) {} //!
 
-void exec_FENCE(Instruction &instr) {} //!
+void exec_FENCE(Instruction &instr, Hart &hart) {} //!
 
-void exec_FENCE_TSO(Instruction &instr) {} //!
+void exec_FENCE_TSO(Instruction &instr, Hart &hart) {} //!
 
-void exec_JAL(Instruction &instr) {} //!
+void exec_JAL(Instruction &instr, Hart &hart) {} //!
 
-void exec_JALR(Instruction &instr) {} //!
+void exec_JALR(Instruction &instr, Hart &hart) {} //!
 
-void exec_LB(Instruction &instr) {} //!
+void exec_LB(Instruction &instr, Hart &hart) {} //!
 
-void exec_LBU(Instruction &instr) {} //!
+void exec_LBU(Instruction &instr, Hart &hart) {} //!
 
-void exec_LH(Instruction &instr) {} //!
+void exec_LH(Instruction &instr, Hart &hart) {} //!
 
-void exec_LHU(Instruction &instr) {} //!
+void exec_LHU(Instruction &instr, Hart &hart) {} //!
 
-void exec_LUI(Instruction &instr) {} //!
+void exec_LUI(Instruction &instr, Hart &hart) {} //!
 
-void exec_LW(Instruction &instr) {} //!
+void exec_LW(Instruction &instr, Hart &hart) {} //!
 
-void exec_OR(Instruction &instr) {} //!
+void exec_OR(Instruction &instr, Hart &hart) {} //!
 
-void exec_ORI(Instruction &instr) {} //!
+void exec_ORI(Instruction &instr, Hart &hart) {} //!
 
-void exec_PAUSE(Instruction &instr) {} //!
+void exec_PAUSE(Instruction &instr, Hart &hart) {} //!
 
-void exec_SB(Instruction &instr) {} //!
+void exec_SB(Instruction &instr, Hart &hart) {} //!
 
-void exec_SBREAK(Instruction &instr) {} //!
+void exec_SBREAK(Instruction &instr, Hart &hart) {} //!
 
-void exec_SCALL(Instruction &instr) {} //!
+void exec_SCALL(Instruction &instr, Hart &hart) {} //!
 
-void exec_SH(Instruction &instr) {} //!
+void exec_SH(Instruction &instr, Hart &hart) {} //!
 
-void exec_SLL(Instruction &instr) {} //!
+void exec_SLL(Instruction &instr, Hart &hart) {} //!
 
-void exec_SLT(Instruction &instr) {} //!
+void exec_SLT(Instruction &instr, Hart &hart) {} //!
 
-void exec_SLTI(Instruction &instr) {} //!
+void exec_SLTI(Instruction &instr, Hart &hart) {} //!
 
-void exec_SLTIU(Instruction &instr) {} //!
+void exec_SLTIU(Instruction &instr, Hart &hart) {} //!
 
-void exec_SLTU(Instruction &instr) {} //!
+void exec_SLTU(Instruction &instr, Hart &hart) {} //!
 
-void exec_SRA(Instruction &instr) {} //!
+void exec_SRA(Instruction &instr, Hart &hart) {} //!
 
-void exec_SRL(Instruction &instr) {} //!
+void exec_SRL(Instruction &instr, Hart &hart) {} //!
 
-void exec_SUB(Instruction &instr) {} //!
+void exec_SUB(Instruction &instr, Hart &hart) {} //!
 
-void exec_SW(Instruction &instr) {} //!
+void exec_SW(Instruction &instr, Hart &hart) {} //!
 
-void exec_XOR(Instruction &instr) {} //!
+void exec_XOR(Instruction &instr, Hart &hart) {} //!
 
-void exec_XORI(Instruction &instr) {} //!
+void exec_XORI(Instruction &instr, Hart &hart) {} //!
 
 Executor::Executor()
     : m_exec_instr{

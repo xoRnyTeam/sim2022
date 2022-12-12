@@ -3,21 +3,10 @@
 
 #include <cstdint>
 #include <iostream>
+#include "support.hpp"
 
 namespace sim {
 
-using word_t = std::uint32_t;
-using op_t = std::uint32_t;
-using imm_t = std::uint32_t;
-
-/*
-
-template <typename N>
-struct bits final {
-
-};
-
-*/
 constexpr word_t ones(word_t num) { return (1 << num) - 1; }
 
 template <std::size_t msb, std::size_t lsb> constexpr word_t get_mask() {

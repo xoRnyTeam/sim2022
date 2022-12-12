@@ -7,7 +7,7 @@ ElfLoader::ElfLoader(const std::string &filepath) {
     throw std::invalid_argument("Bad ELF filename : " + filepath);
 }
 
-paddress_t ElfLoader::load(Memory *memory, const std::string &filepath) {
+paddress_t ElfLoader::load(Memory &memory) {
   // check for 32-bit
   if (m_reader.get_class() != ELFIO::ELFCLASS32) {
     throw std::runtime_error("Wrong ELF file class.");
@@ -26,7 +26,8 @@ paddress_t ElfLoader::load(Memory *memory, const std::string &filepath) {
     paddress_t address = segment->get_virtual_address();
     size_t filesz = static_cast<size_t>(segment->get_file_size());
     size_t memsz = static_cast<size_t>(segment->get_memory_size());
-    memory->writeRaw(
+    //
+    memory.writeRaw(
         address, reinterpret_cast<const byte_t *>(segment->get_data()), filesz);
   }
 }

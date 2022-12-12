@@ -28,5 +28,5 @@ foreach(TARGET IN LISTS TARGETS)
 endforeach()
 
 foreach(TARGET ${SIM})
-  target_link_libraries(${TARGET} PRIVATE ${SIMLIB})
+  target_link_libraries(${TARGET} PUBLIC ${SIMLIB} decoder)
 endforeach()
