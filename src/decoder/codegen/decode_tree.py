@@ -185,7 +185,7 @@ def get_lsb(num) -> int:
     #
 #
 def get_switch(lsb : int, mask : int) -> str:
-    return f"switch ((word >> {lsb}) & {bin(mask >> lsb)})"
+    return f"switch ((word >> {lsb}) & {bin(mask)})"
     #
 #
 def get_case(node : int) -> str:

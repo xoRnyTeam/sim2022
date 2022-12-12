@@ -1,16 +1,15 @@
 cmake_minimum_required(VERSION 3.16)
 project(sim2022)
 
-# include(cmake/subdirs.cmake)
 set(CMAKE_INCL subdirs flags)
 #
 foreach(INCL ${CMAKE_INCL})
   include(cmake/${INCL}.cmake)
 endforeach()
-#
 
-set(DIRS 3rd_party src sim)
+enable_testing()
 
+set(DIRS 3rd_party src sim test)
 foreach(DIR ${DIRS})
   add_subdirectory(${DIR})
 endforeach()
@@ -24,7 +23,7 @@ foreach(TARGET IN LISTS TARGETS)
 
   # target_compile_options(${TARGET} PRIVATE -Wall -Wextra -Wpedantic)
   apply_compiler_flags(${TARGET} PRIVATE)
-  target_compile_features(${TARGET} PRIVATE cxx_std_17)
+  target_compile_features(${TARGET} PRIVATE cxx_std_20)
 endforeach()
 
 foreach(TARGET ${SIM})
