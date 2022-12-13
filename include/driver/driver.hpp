@@ -34,6 +34,7 @@ private:
   //
   paddress_t &pc() { return m_hart.pc; }
   bool is_terminate() { return m_hart.terminate; }
+  void dumpRegFile(std::ostream &outs) const;
   //
 };
 } // namespace sim

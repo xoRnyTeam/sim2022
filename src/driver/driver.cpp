@@ -17,4 +17,12 @@ void Driver::run() {
     //
   }
 }
+
+void Driver::dumpRegFile(std::ostream &outs) const {
+  outs << m_hart.pc;
+  for (reg_id_t reg = 0; reg < RegNum; ++reg) {
+    outs << "x" << reg << " : " << m_hart.getReg(reg) << "\n";
+  }
+}
+
 } // namespace sim
