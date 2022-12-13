@@ -22,7 +22,7 @@ public:
   Executor &operator=(const Executor &) = delete;
   Executor &operator=(Executor &&) = delete;
   //
-  void exec(Instruction &instr, Hart &hart) const { m_exec_instr.at(instr.id)(instr, hart); }
+  void exec(Instruction &instr, Hart &hart) const;
 };
 
 } // namespace sim

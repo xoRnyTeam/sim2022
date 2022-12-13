@@ -7,7 +7,7 @@ ElfLoader::ElfLoader(const std::string &filepath) {
     throw std::invalid_argument("Bad ELF filename : " + filepath);
 }
 
-paddress_t ElfLoader::load(Memory &memory) {
+void ElfLoader::load(Memory &memory) {
   // check for 32-bit
   if (m_reader.get_class() != ELFIO::ELFCLASS32) {
     throw std::runtime_error("Wrong ELF file class.");

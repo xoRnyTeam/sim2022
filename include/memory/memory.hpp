@@ -21,11 +21,11 @@ public:
   /// @brief Read \p nbytes bytes from physical address \p addr to dst pointer
   void readRaw(paddress_t addr, byte_t *dst, size_t nbytes) const;
 
-  /// @brief 
-  /// @param addr 
-  /// @param dst 
-  /// @param nbytes 
+  /// @brief
+  /// @param addr
   word_t readWord(paddress_t addr) const;
+
+  void writeWord(paddress_t addr, word_t value);
 
   /// @brief Fill memory with value
   void memfill(paddress_t addr, byte_t val, size_t nbytes);
