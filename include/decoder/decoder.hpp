@@ -9,7 +9,7 @@ namespace sim {
 class Decoder final {
 
 public:
-  Instruction decode(word_t word);
+  static Instruction decode(word_t word);
 };
 
 } // namespace sim
