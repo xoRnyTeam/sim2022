@@ -16,14 +16,18 @@ void exec_ADD(Instruction &instr, Hart &hart) {
 } //!
 
 void exec_ADDI(Instruction &instr, Hart &hart) {
-  hart.setReg(instr.rd, instr.imm + hart.getReg(instr.rs1));
+  hart.setReg(instr.rd, instr.imm + hart.getReg(instr.rs1)); // FIXME should be sign
 } //!
 
-void exec_AND(Instruction &instr, Hart &hart) {} //!
+void exec_AND(Instruction &instr, Hart &hart) {
+  hart.setReg(instr.rd, hart.getReg(instr.rs1) & hart.getReg(instr.rs2));
+} //!
 
 void exec_ANDI(Instruction &instr, Hart &hart) {} //!
 
-void exec_AUIPC(Instruction &instr, Hart &hart) {} //!
+void exec_AUIPC(Instruction &instr, Hart &hart) {
+  hart.setReg(instr.rd, (instr.imm << 12) + hart.pc);
+} //!
 
 void exec_BEQ(Instruction &instr, Hart &hart) {} //!
 
@@ -47,7 +51,9 @@ void exec_FENCE_TSO(Instruction &instr, Hart &hart) {} //!
 
 void exec_JAL(Instruction &instr, Hart &hart) {} //!
 
-void exec_JALR(Instruction &instr, Hart &hart) {} //!
+void exec_JALR(Instruction &instr, Hart &hart) {
+  // need sign-extended imm
+} //!
 
 void exec_LB(Instruction &instr, Hart &hart) {} //!
 
@@ -55,17 +61,24 @@ void exec_LBU(Instruction &instr, Hart &hart) {} //!
 
 void exec_LH(Instruction &instr, Hart &hart) {} //!
 
-void exec_LHU(Instruction &instr, Hart &hart) {} //!
+void exec_LHU(Instruction &instr, Hart &hart) {
+  //  loads a 16-bit value from memory but then zero extends to 32-bits 
 
-void exec_LUI(Instruction &instr, Hart &hart) {} //!
+} //!
+
+void exec_LUI(Instruction &instr, Hart &hart) {
+  hart.setReg(instr.rd, ((instr.imm & 0b011111111111111111111) << 12));
+} //!
 
 void exec_LW(Instruction &instr, Hart &hart) {
-  vaddress_t address = hart.getReg(instr.rs1) + instr.imm;
+  vaddress_t address = hart.getReg(instr.rs1) + instr.imm; // !!immm sign-extended!!
   word_t value = hart.memory.readWord(address);
   hart.setReg(instr.rd, value);
 } //!
 
-void exec_OR(Instruction &instr, Hart &hart) {} //!
+void exec_OR(Instruction &instr, Hart &hart) {
+  hart.setReg(instr.rd, hart.getReg(instr.rs1) | hart.getReg(instr.rs2));
+} //!
 
 void exec_ORI(Instruction &instr, Hart &hart) {} //!
 
@@ -79,19 +92,34 @@ void exec_SCALL(Instruction &instr, Hart &hart) {} //!
 
 void exec_SH(Instruction &instr, Hart &hart) {} //!
 
-void exec_SLL(Instruction &instr, Hart &hart) {} //!
+void exec_SLL(Instruction &instr, Hart &hart) {
+  //shifts on the value in register rs1 by the shift amount held in the lower 5 bits of register rs2
+  hart.setReg(instr.rd, hart.getReg(instr.rs1) << (hart.getReg(instr.rs2) & 0b011111));
+} //!
 
-void exec_SLT(Instruction &instr, Hart &hart) {} //!
+void exec_SLT(Instruction &instr, Hart &hart) {
+  // sign compare
+  hart.setReg(instr.rd, (int)instr.rs1 < (int)instr.rs2);
+} //!
 
 void exec_SLTI(Instruction &instr, Hart &hart) {} //!
 
 void exec_SLTIU(Instruction &instr, Hart &hart) {} //!
 
-void exec_SLTU(Instruction &instr, Hart &hart) {} //!
+void exec_SLTU(Instruction &instr, Hart &hart) {
+  // unsign cmp
+  hart.setReg(instr.rd, instr.rs1 < instr.rs2);
+} //!
 
-void exec_SRA(Instruction &instr, Hart &hart) {} //!
+void exec_SRA(Instruction &instr, Hart &hart) {
+  // arifmetic shifts on the value in register rs1 by the shift amount held in the lower 5 bits of register rs2
+  hart.setReg(instr.rd, ((int)hart.getReg(instr.rs1)) >> (hart.getReg(instr.rs2) & 0b011111));
+} //!
 
-void exec_SRL(Instruction &instr, Hart &hart) {} //!
+void exec_SRL(Instruction &instr, Hart &hart) {
+  //shifts on the value in register rs1 by the shift amount held in the lower 5 bits of register rs2
+  hart.setReg(instr.rd, hart.getReg(instr.rs1) >> (hart.getReg(instr.rs2) & 0b011111));
+} //!
 
 void exec_SUB(Instruction &instr, Hart &hart) {
   hart.setReg(instr.rd, hart.getReg(instr.rs1) - hart.getReg(instr.rs2));
@@ -103,7 +131,9 @@ void exec_SW(Instruction &instr, Hart &hart) {
   hart.memory.writeWord(address, value);
 } //!
 
-void exec_XOR(Instruction &instr, Hart &hart) {} //!
+void exec_XOR(Instruction &instr, Hart &hart) {
+  hart.setReg(instr.rd, hart.getReg(instr.rs1) ^ hart.getReg(instr.rs2));
+} //!
 
 void exec_XORI(Instruction &instr, Hart &hart) {} //!
 
