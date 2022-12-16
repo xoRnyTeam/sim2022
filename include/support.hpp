@@ -16,7 +16,7 @@ using reg_id_t = std::uint32_t;
 using word_t = std::uint32_t;
 //
 using op_t = std::uint32_t;
-using imm_t = std::uint32_t;
+using imm_t = std::int32_t;
 //
 constexpr reg_id_t RegNum = 32;
 

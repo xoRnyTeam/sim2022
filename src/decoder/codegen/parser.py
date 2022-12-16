@@ -4,12 +4,16 @@ import yaml
 
 ISET_EXTENSIONS = dict({"RV32I" : list([["rv32_i"], ["rv_i"]])})
 
-def get_range(msb, lsb) -> dict:
-    return dict({"msb" : msb, "lsb" : lsb})
+## lshift, rshift - sequential shift left then right by the specified number of bits. 
+## Can be used for sign extension.
+def get_range(msb, lsb, lshift = 0, rshift = 0) -> dict:
+    return dict({"msb" : msb, "lsb" : lsb, "lshift" : lshift, "rshift" : rshift})
 
 def get_slice(range : dict) -> str:
-    msb, lsb = range["msb"], range["lsb"]  
-    return f"slice<{msb}, {lsb}>(word);"
+    msb, lsb = range["msb"], range["lsb"]
+    lshift, rshift = range["lshift"],  range["rshift"]
+    # arifmet shift right (the sign bit multiplies)
+    return f"std::bit_cast<int32_t>(slice<{msb}, {lsb}>(word) << {lshift}) >> {rshift};"
 
 REG_DICT = dict({
     "rm": [get_range(14, 12)],
@@ -21,21 +25,33 @@ REG_DICT = dict({
 })
 
 IMM_DICT = dict({
-    "imm20": [get_range(31, 12)],
+    "imm20": [get_range(31, 12, 12, 0)],
     "jimm20": [
-        get_range(31, 31),
-        get_range(30, 21),
-        get_range(20, 20),
-        get_range(19, 12),
+        get_range(31, 31, 31, 11), # sign
+        get_range(30, 21, 1 ,  0),
+        get_range(20, 20, 11,  0),
+        get_range(19, 12, 12,  0),
     ],
     "succ": [get_range(23, 20)],
     "pred": [get_range(27, 24)],
     "fm": [get_range(31, 28)],
-    "imm12": [get_range(31, 20)],
-    "bimm12hi": [get_range(31, 31), get_range(30, 25)],
-    "bimm12lo": [get_range(11, 8), get_range(7, 7)],
-    "imm12hi": [get_range(31, 25)],
-    "imm12lo": [get_range(11, 7)],
+    "imm12": [
+        get_range(31, 31, 31, 20), # sign
+        get_range(30, 20,  0,  0)
+    ],
+    "bimm12hi": [
+        get_range(31, 31, 31, 19), # sign
+        get_range(30, 25,  5,  0)
+        ],
+    "bimm12lo": [
+        get_range(11, 8,  1, 0), 
+        get_range( 7, 7, 11, 0)
+        ],
+    "imm12hi": [
+        get_range(31, 31, 31, 20), # sign
+        get_range(30, 25,  5,  0)
+        ],
+    "imm12lo": [get_range(11, 7, 0, 0)],
 })
 
 

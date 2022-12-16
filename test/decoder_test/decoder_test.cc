@@ -240,3 +240,78 @@ TEST(decoder, JAL) {
   auto instr = sim::Decoder::decode(word);
   ASSERT_EQ(instr.id, sim::InstrId::JAL);
 }
+
+
+// imm tests
+//=---------
+
+TEST(decoder, I_imm) {
+  sim::word_t word = 0b11110000111101010'111'11100'0010011;
+  //
+  auto instr = sim::Decoder::decode(word);
+  ASSERT_EQ(instr.imm, 0b111111111111111111111'11100001111);
+}
+
+TEST(decoder, S_imm) {
+  // 7th bit
+  sim::word_t word = 0b0000000'0111101010'010'00001'0100011;
+  auto instr = sim::Decoder::decode(word);
+  ASSERT_EQ(instr.imm, 0b01);
+  // 11-8
+  word = 0b0000000'0111101010'010'11110'0100011;
+  instr = sim::Decoder::decode(word);
+  ASSERT_EQ(instr.imm, 0b1111'0);
+  //30-25
+  word = 0b0111111'0111101010'010'00000'0100011;
+  instr = sim::Decoder::decode(word);
+  ASSERT_EQ(instr.imm, 0b011111100000);
+  //31
+  word = 0b1000000'0111101010'010'00000'0100011;
+  instr = sim::Decoder::decode(word);
+  ASSERT_EQ(instr.imm, (int32_t)0b111111111111111111111'00000000000);
+}
+
+TEST(decoder, B_imm) {
+  // 7
+  sim::word_t word = 0b0000000'1010111111'000'00001'1100011;
+  auto instr = sim::Decoder::decode(word);
+  ASSERT_EQ(instr.imm, 0b0100000000000);
+  // 11-8
+  word = 0b0000000'0111101010'000'11110'1100011;
+  instr = sim::Decoder::decode(word);
+  ASSERT_EQ(instr.imm, 0b1111'0);
+  //30-25
+  word = 0b0111111'0111101010'000'00000'1100011;
+  instr = sim::Decoder::decode(word);
+  ASSERT_EQ(instr.imm, 0b011111100000);
+  //31
+  word = 0b1000000'0111101010'000'00000'1100011;
+  instr = sim::Decoder::decode(word);
+  ASSERT_EQ(instr.imm, (int32_t)0b11111111111111111111'000000000000);
+}
+
+TEST(decoder, U_imm) {
+  // 31 - 12
+  sim::word_t word = 0b11110000111101010111'11010'0010111;
+  auto instr = sim::Decoder::decode(word);
+  ASSERT_EQ(instr.imm, 0b11110000111101010111'000000000000);
+}
+
+TEST(decoder, J_imm) {
+  // 30-21
+  sim::word_t word = 0b0'1110000111'0'00000000'00001'1101111;
+  auto instr = sim::Decoder::decode(word);
+  ASSERT_EQ(instr.imm, 0b011100001110);
+  // 20
+  word = 0b0'0000000000'1'00000000'00001'1101111;
+  instr = sim::Decoder::decode(word);
+  ASSERT_EQ(instr.imm, 0b1'00000000000);
+  // 19-12
+  word = 0b0'0000000000'0'10001111'00001'1101111;
+  instr = sim::Decoder::decode(word);
+  ASSERT_EQ(instr.imm, 0b10001111'000000000000);
+  //31
+  word = 0b1'0000000000'0'00000000'00001'1101111;
+  instr = sim::Decoder::decode(word);
+  ASSERT_EQ(instr.imm, (int32_t)0b111111111111'00000000000000000000);
+}
