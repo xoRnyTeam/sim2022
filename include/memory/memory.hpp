@@ -23,9 +23,14 @@ public:
 
   /// @brief
   /// @param addr
-  word_t readWord(paddress_t addr) const;
+  word_t  readWord (paddress_t addr) const;
+  hword_t readHWord(paddress_t addr) const;
+  bword_t readBWord(paddress_t addr) const;
 
-  void writeWord(paddress_t addr, word_t value);
+
+  void writeWord (paddress_t addr, word_t value);
+  void writeHWord(paddress_t addr, hword_t value);
+  void writeBWord(paddress_t addr, bword_t value);
 
   /// @brief Fill memory with value
   void memfill(paddress_t addr, byte_t val, size_t nbytes);
