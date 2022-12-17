@@ -104,6 +104,7 @@ class CodeGen():
         with open(path, "w") as cpp:
             print(include("isa/instr"), file=cpp)
             print(include("decoder/decoder"), file=cpp)
+            print(include("bit", sys=True), file=cpp, end='')
 
             print(open_scope("namespace sim"), file=cpp)
             print(open_scope("Instruction Decoder::decode(word_t word)"), file=cpp)
