@@ -4,6 +4,8 @@
 #include "memory/memory.hpp"
 #include "support.hpp"
 
+#include <fstream>
+
 /**
  * @brief
  *
@@ -19,6 +21,14 @@ struct Hart {
   std::array<reg_val_t, RegNum> regs{};
   bool terminate = false;
   Memory memory{};
+  //
+  std::ofstream *trace_out = nullptr;
+  //
+
+  // private:
+  void setPC(paddress_t val);
+  void addToPC(paddress_t offset);
+  paddress_t getPC() const;
 
   void setReg(reg_id_t reg, reg_val_t val);
   reg_val_t getReg(reg_id_t reg) const;
