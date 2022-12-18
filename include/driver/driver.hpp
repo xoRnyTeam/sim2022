@@ -8,6 +8,8 @@
 #include "memory/memory.hpp"
 #include "support.hpp"
 
+#include <fstream>
+
 namespace sim {
 
 /**
@@ -20,8 +22,11 @@ class Driver final {
   Executor m_executor{};
   Decoder m_decoder{};
   //
+  // TODO: impl log class
+  std::ofstream trace_out;
+  //
 public:
-  Driver(const std::string &path);
+  Driver(const std::string &path, const std::string &path_trace = {});
   //
   Driver(const Driver &) = delete;
   Driver(Driver &&) = delete;
