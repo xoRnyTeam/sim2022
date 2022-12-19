@@ -25,6 +25,9 @@ class Driver final {
   // TODO: impl log class
   std::ofstream trace_out;
   //
+  // statistic
+  size_t m_instCounter = 0;
+  //
 public:
   Driver(const std::string &path, const std::string &path_trace = {});
   //
@@ -34,6 +37,8 @@ public:
   Driver &operator=(Driver &&) = delete;
   //
   void run();
+  //
+  size_t getInstCounter() const { return m_instCounter; }
 
 private:
   //
