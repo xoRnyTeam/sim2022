@@ -22,8 +22,12 @@ class Driver final {
   Executor m_executor{};
   Decoder m_decoder{};
   //
+  std::unordered_map<paddress_t, std::vector<Instruction>> m_nativeBBChache;
   // TODO: impl log class
   std::ofstream trace_out;
+  //
+  // statistic
+  size_t m_instCounter = 0;
   //
 public:
   Driver(const std::string &path, const std::string &path_trace = {});
@@ -34,6 +38,8 @@ public:
   Driver &operator=(Driver &&) = delete;
   //
   void run();
+  //
+  size_t getInstCounter() const { return m_instCounter; }
 
 private:
   //
@@ -41,6 +47,8 @@ private:
   bool is_terminate() { return m_hart.terminate; }
   void dumpRegFile(std::ostream &outs) const;
   //
+  std::vector<Instruction> lookupBB(paddress_t addr);
+  static bool is_terminate(InstrId id);
 };
 } // namespace sim
 
