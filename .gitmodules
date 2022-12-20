@@ -7,3 +7,6 @@
 [submodule "3rd_party/riscv-opcodes"]
 	path = 3rd_party/riscv-opcodes
 	url = git@github.com:riscv/riscv-opcodes.git
+[submodule "3rd_party/asmjit"]
+	path = 3rd_party/asmjit
+	url = git@github.com:asmjit/asmjit.git
