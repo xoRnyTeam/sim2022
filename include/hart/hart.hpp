@@ -3,6 +3,7 @@
 
 #include "memory/memory.hpp"
 #include "support.hpp"
+#include "utils/compiler.hpp"
 
 #include <fstream>
 
@@ -25,13 +26,13 @@ struct Hart {
   std::ofstream *trace_out = nullptr;
   //
 
-  // private:
-  void setPC(paddress_t val);
-  void addToPC(paddress_t offset);
-  paddress_t getPC() const;
+public:
+  void setPC(paddress_t val) { pc = val; }
+  void addToPC(paddress_t offset) { setPC(getPC() + offset); }
+  paddress_t getPC() const { return pc; }
 
-  void setReg(reg_id_t reg, reg_val_t val);
-  reg_val_t getReg(reg_id_t reg) const;
+  void setReg(reg_id_t reg, reg_val_t val) { regs[reg] = val; }
+  reg_val_t getReg(reg_id_t reg) const { return regs[reg]; }
   /// @brief Set terminate flag true
   void setTerminate() { terminate = true; }
 };

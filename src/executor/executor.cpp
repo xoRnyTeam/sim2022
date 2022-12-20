@@ -8,7 +8,7 @@
 namespace sim {
 
 void Executor::exec(Instruction &instr, Hart &hart) const {
-  m_exec_instr.at(instr.id)(instr, hart);
+  m_exec_instr[static_cast<uint8_t>(instr.id)](instr, hart);
 }
 
 void exec_ADD(Instruction &instr, Hart &hart) {
@@ -221,49 +221,48 @@ void exec_XORI(Instruction &instr, Hart &hart) {
   hart.addToPC(4);
 } //!
 
-Executor::Executor()
-    : m_exec_instr{
-          {InstrId::ADD, exec_ADD},
-          {InstrId::ADDI, exec_ADDI},
-          {InstrId::AND, exec_AND},
-          {InstrId::ANDI, exec_ANDI},
-          {InstrId::AUIPC, exec_AUIPC},
-          {InstrId::BEQ, exec_BEQ},
-          {InstrId::BGE, exec_BGE},
-          {InstrId::BGEU, exec_BGEU},
-          {InstrId::BLT, exec_BLT},
-          {InstrId::BLTU, exec_BLTU},
-          {InstrId::BNE, exec_BNE},
-          {InstrId::EBREAK, exec_EBREAK},
-          {InstrId::ECALL, exec_ECALL},
-          {InstrId::FENCE, exec_FENCE},
-          {InstrId::FENCE_TSO, exec_FENCE_TSO},
-          {InstrId::JAL, exec_JAL},
-          {InstrId::JALR, exec_JALR},
-          {InstrId::LB, exec_LB},
-          {InstrId::LBU, exec_LBU},
-          {InstrId::LH, exec_LH},
-          {InstrId::LHU, exec_LHU},
-          {InstrId::LUI, exec_LUI},
-          {InstrId::LW, exec_LW},
-          {InstrId::OR, exec_OR},
-          {InstrId::ORI, exec_ORI},
-          {InstrId::PAUSE, exec_PAUSE},
-          {InstrId::SB, exec_SB},
-          {InstrId::SBREAK, exec_SBREAK},
-          {InstrId::SCALL, exec_SCALL},
-          {InstrId::SH, exec_SH},
-          {InstrId::SLL, exec_SLL},
-          {InstrId::SLT, exec_SLT},
-          {InstrId::SLTI, exec_SLTI},
-          {InstrId::SLTIU, exec_SLTIU},
-          {InstrId::SLTU, exec_SLTU},
-          {InstrId::SRA, exec_SRA},
-          {InstrId::SRL, exec_SRL},
-          {InstrId::SUB, exec_SUB},
-          {InstrId::SW, exec_SW},
-          {InstrId::XOR, exec_XOR},
-          {InstrId::XORI, exec_XORI},
-      } {}
+Executor::Executor() {
+  m_exec_instr[static_cast<uint8_t>(InstrId::ADD)] = exec_ADD;
+  m_exec_instr[static_cast<uint8_t>(InstrId::ADDI)] = exec_ADDI;
+  m_exec_instr[static_cast<uint8_t>(InstrId::AND)] = exec_AND;
+  m_exec_instr[static_cast<uint8_t>(InstrId::ANDI)] = exec_ANDI;
+  m_exec_instr[static_cast<uint8_t>(InstrId::AUIPC)] = exec_AUIPC;
+  m_exec_instr[static_cast<uint8_t>(InstrId::BEQ)] = exec_BEQ;
+  m_exec_instr[static_cast<uint8_t>(InstrId::BGE)] = exec_BGE;
+  m_exec_instr[static_cast<uint8_t>(InstrId::BGEU)] = exec_BGEU;
+  m_exec_instr[static_cast<uint8_t>(InstrId::BLT)] = exec_BLT;
+  m_exec_instr[static_cast<uint8_t>(InstrId::BLTU)] = exec_BLTU;
+  m_exec_instr[static_cast<uint8_t>(InstrId::BNE)] = exec_BNE;
+  m_exec_instr[static_cast<uint8_t>(InstrId::EBREAK)] = exec_EBREAK;
+  m_exec_instr[static_cast<uint8_t>(InstrId::ECALL)] = exec_ECALL;
+  m_exec_instr[static_cast<uint8_t>(InstrId::FENCE)] = exec_FENCE;
+  m_exec_instr[static_cast<uint8_t>(InstrId::FENCE_TSO)] = exec_FENCE_TSO;
+  m_exec_instr[static_cast<uint8_t>(InstrId::JAL)] = exec_JAL;
+  m_exec_instr[static_cast<uint8_t>(InstrId::JALR)] = exec_JALR;
+  m_exec_instr[static_cast<uint8_t>(InstrId::LB)] = exec_LB;
+  m_exec_instr[static_cast<uint8_t>(InstrId::LBU)] = exec_LBU;
+  m_exec_instr[static_cast<uint8_t>(InstrId::LH)] = exec_LH;
+  m_exec_instr[static_cast<uint8_t>(InstrId::LHU)] = exec_LHU;
+  m_exec_instr[static_cast<uint8_t>(InstrId::LUI)] = exec_LUI;
+  m_exec_instr[static_cast<uint8_t>(InstrId::LW)] = exec_LW;
+  m_exec_instr[static_cast<uint8_t>(InstrId::OR)] = exec_OR;
+  m_exec_instr[static_cast<uint8_t>(InstrId::ORI)] = exec_ORI;
+  m_exec_instr[static_cast<uint8_t>(InstrId::PAUSE)] = exec_PAUSE;
+  m_exec_instr[static_cast<uint8_t>(InstrId::SB)] = exec_SB;
+  m_exec_instr[static_cast<uint8_t>(InstrId::SBREAK)] = exec_SBREAK;
+  m_exec_instr[static_cast<uint8_t>(InstrId::SCALL)] = exec_SCALL;
+  m_exec_instr[static_cast<uint8_t>(InstrId::SH)] = exec_SH;
+  m_exec_instr[static_cast<uint8_t>(InstrId::SLL)] = exec_SLL;
+  m_exec_instr[static_cast<uint8_t>(InstrId::SLT)] = exec_SLT;
+  m_exec_instr[static_cast<uint8_t>(InstrId::SLTI)] = exec_SLTI;
+  m_exec_instr[static_cast<uint8_t>(InstrId::SLTIU)] = exec_SLTIU;
+  m_exec_instr[static_cast<uint8_t>(InstrId::SLTU)] = exec_SLTU;
+  m_exec_instr[static_cast<uint8_t>(InstrId::SRA)] = exec_SRA;
+  m_exec_instr[static_cast<uint8_t>(InstrId::SRL)] = exec_SRL;
+  m_exec_instr[static_cast<uint8_t>(InstrId::SUB)] = exec_SUB;
+  m_exec_instr[static_cast<uint8_t>(InstrId::SW)] = exec_SW;
+  m_exec_instr[static_cast<uint8_t>(InstrId::XOR)] = exec_XOR;
+  m_exec_instr[static_cast<uint8_t>(InstrId::XORI)] = exec_XORI;
+}
 
 } // namespace sim
