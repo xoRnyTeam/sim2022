@@ -236,7 +236,7 @@ Executor::Executor() {
   m_exec_instr[static_cast<uint8_t>(InstrId::EBREAK)] = exec_EBREAK;
   m_exec_instr[static_cast<uint8_t>(InstrId::ECALL)] = exec_ECALL;
   m_exec_instr[static_cast<uint8_t>(InstrId::FENCE)] = exec_FENCE;
-  m_exec_instr[static_cast<uint8_t>(InstrId::FENCE_TSO)] = exec_FENCE_TSO;
+  // m_exec_instr[static_cast<uint8_t>(InstrId::FENCE_TSO)] = exec_FENCE_TSO;
   m_exec_instr[static_cast<uint8_t>(InstrId::JAL)] = exec_JAL;
   m_exec_instr[static_cast<uint8_t>(InstrId::JALR)] = exec_JALR;
   m_exec_instr[static_cast<uint8_t>(InstrId::LB)] = exec_LB;
@@ -247,10 +247,10 @@ Executor::Executor() {
   m_exec_instr[static_cast<uint8_t>(InstrId::LW)] = exec_LW;
   m_exec_instr[static_cast<uint8_t>(InstrId::OR)] = exec_OR;
   m_exec_instr[static_cast<uint8_t>(InstrId::ORI)] = exec_ORI;
-  m_exec_instr[static_cast<uint8_t>(InstrId::PAUSE)] = exec_PAUSE;
+  // m_exec_instr[static_cast<uint8_t>(InstrId::PAUSE)] = exec_PAUSE;
   m_exec_instr[static_cast<uint8_t>(InstrId::SB)] = exec_SB;
-  m_exec_instr[static_cast<uint8_t>(InstrId::SBREAK)] = exec_SBREAK;
-  m_exec_instr[static_cast<uint8_t>(InstrId::SCALL)] = exec_SCALL;
+  // m_exec_instr[static_cast<uint8_t>(InstrId::SBREAK)] = exec_SBREAK;
+  // m_exec_instr[static_cast<uint8_t>(InstrId::SCALL)] = exec_SCALL;
   m_exec_instr[static_cast<uint8_t>(InstrId::SH)] = exec_SH;
   m_exec_instr[static_cast<uint8_t>(InstrId::SLL)] = exec_SLL;
   m_exec_instr[static_cast<uint8_t>(InstrId::SLT)] = exec_SLT;

@@ -7,7 +7,7 @@ RISC_V_DIR=${SIM_DIR}3rd_party/riscv-opcodes
 .PRECIOUS: yaml_gen
 
 yaml_gen:
-	cd ${RISC_V_DIR} && make
+	cd ${RISC_V_DIR} && python3 parse.py rv_i rv_m rv_zicsr rv32_i
 
 all: yaml_gen
-	python3 main.py --dir ${RISC_V_DIR} --iset RV32I
+	python3 main.py --dir ${RISC_V_DIR}

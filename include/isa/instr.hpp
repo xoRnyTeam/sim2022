@@ -11,6 +11,8 @@ struct Instruction final {
   op_t rs2{};
   op_t rs3{};
   //
+  op_t csr{};
+  //
   op_t rd{};
   //
   imm_t imm{};

@@ -6,11 +6,11 @@ from codegen import CodeGen
 from ruamel.yaml import YAML
 
 def main():
-    parser = argparse.ArgumentParser(description="RISC-V ISA parser")
-    parser.add_argument('-dir', '--directory', type=str, help="Path to yaml sources directory")
-    parser.add_argument('--iset', type=str, help="Base instruction set type")
+    arg_parser = argparse.ArgumentParser(description="RISC-V ISA parser")
+    arg_parser.add_argument('-dir', '--directory', type=str, help="Path to yaml sources directory")
+    arg_parser.add_argument('--exts', type=list, help="Instruction set extensions")
     #
-    args = parser.parse_args()
+    args = arg_parser.parse_args()
     parser = Parser(args)
     parser.parse()
 
