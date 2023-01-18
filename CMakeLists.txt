@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 project(sim2022)
 
-set(CMAKE_INCL subdirs flags)
+set(CMAKE_INCL subdirs flags upd_list)
 #
 foreach(INCL ${CMAKE_INCL})
   include(cmake/${INCL}.cmake)
