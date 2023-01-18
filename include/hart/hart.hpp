@@ -1,6 +1,7 @@
 #ifndef HART_HPP
 #define HART_HPP
 
+#include "csr.hpp"
 #include "memory/memory.hpp"
 #include "support.hpp"
 #include "utils/compiler.hpp"
@@ -20,6 +21,7 @@ namespace sim {
 struct Hart {
   paddress_t pc{};
   std::array<reg_val_t, RegNum> regs{};
+  CSRRegfile CSRegs;
   bool terminate = false;
   Memory memory{};
   //
