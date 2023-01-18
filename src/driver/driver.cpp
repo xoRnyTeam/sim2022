@@ -91,9 +91,9 @@ bool Driver::is_terminate(InstrId id) {
   case InstrId::ECALL:
   case InstrId::JAL:
   case InstrId::JALR:
-  case InstrId::PAUSE:
-  case InstrId::SBREAK:
-  case InstrId::SCALL:
+  // case InstrId::PAUSE:
+  // case InstrId::SBREAK:
+  // case InstrId::SCALL:
     return true;
     break;
   }

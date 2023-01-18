@@ -2,8 +2,6 @@ from pathlib import Path
 import yaml
 # from ruamel.yaml import YAML
 
-ISET_EXTENSIONS = dict({"RV32I" : list([["rv32_i"], ["rv_i"]])})
-
 ## lshift, rshift - sequential shift left then right by the specified number of bits. 
 ## Can be used for sign extension.
 def get_range(msb, lsb, lshift = 0, rshift = 0) -> dict:
@@ -92,13 +90,11 @@ class Instruction():
 class Parser():
 #
     def __init__(self, args) -> None:
-        self.iset = args.iset
+    #    
         self.path = args.directory + "/instr_dict.yaml"
         print(self.path)
-        self.iset = args.iset
         #
         self.data = None
-        self.cur_extensions = ISET_EXTENSIONS.get(self.iset)
         #
         # Read YAML file
         with open(self.path, 'r') as file:
@@ -112,5 +108,4 @@ class Parser():
     #
         for it in self.data.items():
             mn, instr_data = it[0], it[1]
-            if instr_data["extension"] in self.cur_extensions:
-                self.instructions.append(Instruction(mn, instr_data))
+            self.instructions.append(Instruction(mn, instr_data))
