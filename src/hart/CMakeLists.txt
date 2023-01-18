@@ -1,2 +1,2 @@
 set(TARGET hart)
-add_library(${TARGET} ${TARGET}.cpp)
+add_library(${TARGET} ${TARGET}.cpp csr.cpp)
