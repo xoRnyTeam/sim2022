@@ -21,6 +21,7 @@ foreach(TARGET IN LISTS TARGETS)
   target_include_directories(${TARGET} PRIVATE ${CMAKE_SOURCE_DIR}/include)
   target_include_directories(${TARGET} PRIVATE ${CMAKE_SOURCE_DIR}/3rd_party)
   target_include_directories(${TARGET} PRIVATE ${CMAKE_SOURCE_DIR}/3rd_party/ELFIO)
+  target_include_directories(${TARGET} PRIVATE ${CMAKE_SOURCE_DIR}/3rd_party/asmjit/src)
 
   # target_compile_options(${TARGET} PRIVATE -Wall -Wextra -Wpedantic)
   apply_compiler_flags(${TARGET} PRIVATE)
