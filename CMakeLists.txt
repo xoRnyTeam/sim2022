@@ -19,6 +19,7 @@ list(APPEND TARGETS ${SIM} ${SIMLIB})
 
 foreach(TARGET IN LISTS TARGETS)
   target_include_directories(${TARGET} PRIVATE ${CMAKE_SOURCE_DIR}/include)
+  target_include_directories(${TARGET} PRIVATE ${CMAKE_SOURCE_DIR}/3rd_party)
   target_include_directories(${TARGET} PRIVATE ${CMAKE_SOURCE_DIR}/3rd_party/ELFIO)
 
   # target_compile_options(${TARGET} PRIVATE -Wall -Wextra -Wpedantic)
