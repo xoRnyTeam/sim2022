@@ -12,10 +12,13 @@ if(BUILD_TESTS)
     #
     foreach(TEST ${TESTLIST})
         target_include_directories(${TEST} PRIVATE ${CMAKE_SOURCE_DIR}/include)
+        target_include_directories(${TEST} PRIVATE ${CMAKE_SOURCE_DIR}/3rd_party)
         target_include_directories(${TEST} PRIVATE ${GTEST_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR})
+        target_include_directories(${TEST} PRIVATE ${CMAKE_SOURCE_DIR}/3rd_party/asmjit/src)
 
         #
         target_link_libraries(${TEST} PRIVATE ${GTEST_BOTH_LIBRARIES} pthread)
+        target_link_libraries(${TEST} PRIVATE asmjit)
         target_link_libraries(${TEST} PRIVATE ${SIMLIB})
 
         #
