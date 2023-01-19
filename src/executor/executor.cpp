@@ -89,7 +89,7 @@ void exec_JALR(Instruction &instr, Hart &hart) {
 
 void exec_LB(Instruction &instr, Hart &hart) {
   vaddress_t address = hart.getReg(instr.rs1) + instr.imm;
-  word_t value = hart.memory.readBWord(address);
+  word_t value = hart.mmu().read<bword_t>(address);
   //                    sign extend value
   hart.setReg(instr.rd, std::bit_cast<int32_t>(value << 24) >> 24);
   hart.addToPC(4);
@@ -97,14 +97,14 @@ void exec_LB(Instruction &instr, Hart &hart) {
 
 void exec_LBU(Instruction &instr, Hart &hart) {
   vaddress_t address = hart.getReg(instr.rs1) + instr.imm;
-  word_t value = 0xFF & hart.memory.readBWord(address);
+  word_t value = 0xFF & hart.mmu().read<bword_t>(address);
   hart.setReg(instr.rd, value);
   hart.addToPC(4);
 } //!
 
 void exec_LH(Instruction &instr, Hart &hart) {
   vaddress_t address = hart.getReg(instr.rs1) + instr.imm;
-  word_t value = hart.memory.readHWord(address);
+  word_t value = hart.mmu().read<hword_t>(address);
   //                    sign extend value
   hart.setReg(instr.rd, std::bit_cast<int32_t>(value << 16) >> 16);
   hart.addToPC(4);
@@ -112,7 +112,7 @@ void exec_LH(Instruction &instr, Hart &hart) {
 
 void exec_LHU(Instruction &instr, Hart &hart) {
   vaddress_t address = hart.getReg(instr.rs1) + instr.imm;
-  word_t value = 0xFFFF & hart.memory.readHWord(address);
+  word_t value = 0xFFFF & hart.mmu().read<hword_t>(address);
   hart.setReg(instr.rd, value);
   hart.addToPC(4);
 } //!
@@ -124,7 +124,7 @@ void exec_LUI(Instruction &instr, Hart &hart) {
 
 void exec_LW(Instruction &instr, Hart &hart) {
   vaddress_t address = hart.getReg(instr.rs1) + instr.imm;
-  word_t value = hart.memory.readWord(address);
+  word_t value = hart.mmu().read<word_t>(address);
   hart.setReg(instr.rd, value);
   hart.addToPC(4);
 } //!
@@ -144,7 +144,7 @@ void exec_PAUSE(Instruction &instr, Hart &hart) { hart.setTerminate(); } //!
 void exec_SB(Instruction &instr, Hart &hart) {
   vaddress_t address = hart.getReg(instr.rs1) + instr.imm;
   bword_t value = static_cast<bword_t>(hart.getReg(instr.rs2) & 0xFF);
-  hart.memory.writeBWord(address, value);
+  hart.mmu().write<bword_t>(address, value);
   hart.addToPC(4);
 } //!
 
@@ -155,7 +155,7 @@ void exec_SCALL(Instruction &instr, Hart &hart) { hart.setTerminate(); } //!
 void exec_SH(Instruction &instr, Hart &hart) {
   vaddress_t address = hart.getReg(instr.rs1) + instr.imm;
   hword_t value = static_cast<hword_t>(hart.getReg(instr.rs2) & 0xFFFF);
-  hart.memory.writeHWord(address, value);
+  hart.mmu().write<hword_t>(address, value);
   hart.addToPC(4);
 } //!
 
@@ -207,7 +207,7 @@ void exec_SUB(Instruction &instr, Hart &hart) {
 void exec_SW(Instruction &instr, Hart &hart) {
   vaddress_t address = hart.getReg(instr.rs1) + instr.imm;
   word_t value = hart.getReg(instr.rs2);
-  hart.memory.writeWord(address, value);
+  hart.mmu().write<word_t>(address, value);
   hart.addToPC(4);
 } //!
 
