@@ -5,7 +5,7 @@ namespace sim {
 
 CSRRegfile::CSRRegfile() {
   // Fill CSRs according to simulated architecture
-
+  m_regs.resize(CSRegNum);
   // MISA
   csr_val_t mxl = 1 << (MXLEN - 2);
   // I M Z, shift is index in alphabet

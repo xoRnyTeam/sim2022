@@ -18,7 +18,7 @@ namespace sim {
  */
 class Driver final {
   //
-  Hart m_hart{};
+  Hart m_hart;
   Executor m_executor{};
   Decoder m_decoder{};
   //

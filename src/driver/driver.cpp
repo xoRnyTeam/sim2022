@@ -5,7 +5,7 @@ namespace sim {
 
 Driver::Driver(const std::string &path, const std::string &path_trace) {
   ElfLoader loader{path};
-  loader.load(m_hart.memory);
+  loader.load(m_hart.mmu().getMemory());
   //
   trace_out.open(path_trace);
   if (trace_out.is_open()) {
@@ -68,7 +68,7 @@ std::vector<Instruction> Driver::lookupBB(paddress_t addr) {
     paddress_t cur_addr = addr;
     std::vector<Instruction> res;
     do {
-      word_t cur_word = m_hart.memory.readWord(cur_addr);
+      word_t cur_word = m_hart.mmu().read<word_t>(cur_addr);
       instr = m_decoder.decode(cur_word);
       res.push_back(instr);
       cur_addr += 4;
@@ -95,6 +95,10 @@ bool Driver::is_terminate(InstrId id) {
   // case InstrId::SBREAK:
   // case InstrId::SCALL:
     return true;
+    break;
+  default:
+    // Disabling warning
+    return false;
     break;
   }
   return false;
