@@ -63,29 +63,44 @@ class Instruction():
         self.fields = instr_data["variable_fields"]
         #
     #
-    def get_decode(self) -> list:
+    def get_decode(self, fields_opt = True) -> list:
     #
         decode = list()
-        decode.append(f"//! {self.mn}")
-        decode.append(f"//! {self.encoding}")
-        decode.append(f"instr.id = InstrId::{self.mn};")
-
+        #
+        decode += self.get_id()
+        if fields_opt:
+            decode += self.get_fields()
+        #
+        decode.append("return instr;")
+        #
+        return decode
+    #
+    def get_fields(self) -> list:
+    #
+        fields = list()
+        #
         for field in self.fields:
             reg_ranges = REG_DICT.get(field)
             imm_ranges = IMM_DICT.get(field)
             #
             if reg_ranges != None:
                 for it in reg_ranges:
-                    decode.append(f"instr.{field} = {get_slice(it)}")
+                    fields.append(f"instr.{field} = {get_slice(it)}")
             #
             elif imm_ranges != None:
                 for it in imm_ranges:
-                    decode.append(f"instr.imm |= {get_slice(it)}")
+                    fields.append(f"instr.imm |= {get_slice(it)}")
         #
-        decode.append("return instr;")
-        #
-        return decode
-    #       
+        return fields
+    #
+    def get_id(self) -> list:
+    #
+        id = list()
+        id.append(f"//! {self.mn}")
+        id.append(f"//! {self.encoding}")
+        id.append(f"instr.id = InstrId::{self.mn};")
+        return id
+    #
 #
 class Parser():
 #

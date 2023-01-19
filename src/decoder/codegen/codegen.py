@@ -1,4 +1,6 @@
 from decode_tree import DecodeTree
+from decode_tree import Decoder
+#
 from parser import Instruction
 from ruamel.yaml import YAML
 from pathlib import PosixPath, Path
@@ -99,18 +101,20 @@ class CodeGen():
     #
     def decoder_gen(self, path : Path):
     #
-        self._tree.get_decoder(self.decode_tree)
+        decoder = Decoder(self.decode_tree)
+        decoder.dump()
 
         with open(path, "w") as cpp:
             print(include("isa/instr"), file=cpp)
             print(include("decoder/decoder"), file=cpp)
             print(include("bit", sys=True), file=cpp, end='')
+            print(include("bitset", sys=True), file=cpp, end='')
 
             print(open_scope("namespace sim"), file=cpp)
             print(open_scope("Instruction Decoder::decode(word_t word)"), file=cpp)
             print("  Instruction instr{};", file=cpp)
 
-            for str in self._tree._decode_code:
+            for str in decoder._decoder_code:
                 print(str, file=cpp)
 
             print(close_scope(), file=cpp)
