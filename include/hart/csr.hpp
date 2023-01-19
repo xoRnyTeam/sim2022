@@ -10,7 +10,7 @@
 #include "isa/bits.hpp"
 #include "riscv-opcodes/encoding.out.h"
 #include "support.hpp"
-#include <array>
+#include <vector>
 #include <assert.h>
 
 namespace sim {
@@ -24,7 +24,7 @@ using csr_val_t = uint32_t;
 static_assert(MXLEN == sizeof(csr_val_t) * 8);
 
 class CSRRegfile {
-  std::array<csr_val_t, CSRegNum> m_regs{};
+  std::vector<csr_val_t> m_regs;
 
 public:
   CSRRegfile();
