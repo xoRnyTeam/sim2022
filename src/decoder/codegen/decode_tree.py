@@ -1,15 +1,14 @@
 from collections import defaultdict
 from parser import Instruction
 
+from typing import List
+
 INDENT = "    "
 
 class DecodeTree():
     def __init__(self, instructions) -> None:
         self.instructions = instructions
-        #
         self._decode_tree = dict()
-        self._decode_code = list()
-        self._decode_map = defaultdict(list)
         #
         self.make_head()
         #
@@ -39,7 +38,6 @@ class DecodeTree():
             #
             node += 1 << lsb
           #
-        
     #
     def make_child(self, node : int, separ_mask : int, instr_list : list, subtree : dict):
         sublist = make_sublist(instr_list, node, separ_mask)
@@ -95,27 +93,16 @@ class DecodeTree():
             return None, None
             #
     #
-    def get_decoder(self, tree : dict) -> list:
-        cur_range = tree["range"]
-        lsb, msb = cur_range['lsb'], cur_range['msb']
+#
+def check_all_nodes(nodes):
+    for node in nodes.values():
+        if isinstance(node, dict):
+            return False
         #
-        mask = get_mask(lsb, msb)
-        self._decode_code.append(get_switch(lsb, mask))
-        self._decode_code.append(f"{{")
+        if not isinstance(node[0], Instruction):
+            return False
         #
-        for node in tree["nodes"]:
-            self._decode_code.append(get_case(node))
-            self._decode_code.append(f"{{")
-            #
-            if isinstance(tree["nodes"][node], dict):
-                self.get_decoder(tree["nodes"][node])
-            #
-            elif isinstance(tree["nodes"][node][0], Instruction):
-                self._decode_code += tree["nodes"][node][0].get_decode()
-            #
-            self._decode_code.append(f"}}")
-        #
-        self._decode_code.append(f"}}")
+    return True
     #
 #
 def make_sublist(instr_list : list, node : int, separ_mask : int) -> list:
@@ -162,6 +149,46 @@ def get_lead_bits(instructions : list, separ_mask : int = 0) -> int:
     return lead_bits
     #
 #
+class Decoder():
+    def __init__(self, tree : dict) -> None:
+        self._tree = tree
+        self._decode_map = defaultdict(dict)
+        self._decoder_code = list()
+        #
+        self.make_decoder(self._tree)
+        #
+    #
+    def make_decoder(self, tree : dict, prev_mask : int = 0, prev_node : int = 0):
+    #
+        cur_range = tree["range"]
+        lsb, msb = cur_range['lsb'], cur_range['msb']
+        cur_mask = prev_mask | get_mask(lsb, msb)
+        #
+        for node in tree["nodes"]:
+            cur_node = prev_node | node << lsb
+            #
+            if isinstance(tree["nodes"][node], dict):
+                self.make_decoder(tree["nodes"][node], cur_mask, cur_node)
+            #
+            elif isinstance(tree["nodes"][node][0], Instruction):
+                self._decode_map[cur_mask][cur_node] = tree["nodes"][node][0]
+            #
+    #
+    def dump(self):
+    #
+        for (mask, decode_nodes) in self._decode_map.items():
+            self._decoder_code.append(get_switch(mask))
+            self._decoder_code.append(f"{{")
+            for (node, instr) in decode_nodes.items(): 
+                self._decoder_code.append(get_case(node))
+                self._decoder_code.append(f"{{")
+                self._decoder_code += instr.get_decode()
+                self._decoder_code.append(f"}}")
+            self._decoder_code.append(f"}}")
+            #
+    #
+#
+#
 def get_bit(num, ind) -> int:
     return num & (1 << ind)
     #
@@ -184,7 +211,7 @@ def get_lsb(num) -> int:
     return lsb
     #
 #
-def get_switch(lsb : int, mask : int) -> str:
+def get_switch(mask : int = 0, lsb : int = 0) -> str:
     return f"switch ((word >> {lsb}) & {bin(mask)})"
     #
 #
@@ -193,4 +220,37 @@ def get_case(node : int) -> str:
     #
 #
 def get_mask(lsb, msb) ->int:
-    return ones(msb - lsb + 1)
+    return ones(msb - lsb + 1) << lsb
+
+
+# def get_decoder(self, tree : dict, prev_mask : int = 0) -> list:
+# #
+#     add_fields = True   
+#     cur_range = tree["range"]
+#     lsb, msb = cur_range['lsb'], cur_range['msb']
+#     #
+#     mask = get_mask(lsb, msb)
+#     # cur_switch = get_switch(lsb, mask)
+#     #
+#     # if check_all_nodes(tree["nodes"]):
+#     #     self._decode_code += tree["nodes"][0][0].get_fields()
+#     #     add_fields = False
+#     #
+#     # self._decode_code.append(cur_switch)
+#     #
+#     self._decode_code.append(f"{{")
+#     #
+#     for node in tree["nodes"]:
+#         cur_case = get_case(node)
+#         # self._decode_code.append(cur_case)
+#         # self._decode_code.append(f"{{")
+#         #
+#         if isinstance(tree["nodes"][node], dict):
+#             self.get_decoder(tree["nodes"][node], prev_mask | mask)
+#         #
+#         elif isinstance(tree["nodes"][node][0], Instruction):
+#             self._decode_code += tree["nodes"][node][0].get_decode(add_fields)
+#         #
+#         self._decode_code.append(f"}}")
+#     #
+#     self._decode_code.append(f"}}")
