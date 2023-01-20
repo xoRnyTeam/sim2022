@@ -4,12 +4,13 @@
 #include "decoder/decoder.hpp"
 #include "executor/executor.hpp"
 #include "hart/hart.hpp"
+#include "jit/rvjit.hpp"
 #include "loader/loader.hpp"
 #include "memory/memory.hpp"
 #include "support.hpp"
-#include "jit/rvjit.hpp"
 
 #include <fstream>
+#include <functional>
 
 namespace sim {
 
@@ -27,9 +28,12 @@ class Driver final {
   // bt
   RVJit m_jit;
   // <function, translated instructions>
-  std::unordered_map<paddress_t, std::pair<RVJit::FunctionTy, size_t>> m_translated;
+  std::unordered_map<paddress_t, std::pair<RVJit::FunctionTy, size_t>>
+      m_translated;
   // cache line block
   std::unordered_map<paddress_t, std::vector<Instruction>> m_nativeBBChache;
+  std::unordered_map<paddress_t, std::vector<CallInfo>>
+      m_linkedBBChache;
   // TODO: impl log class
   std::ofstream trace_out;
   //
@@ -54,7 +58,9 @@ private:
   bool is_terminate() { return m_hart.terminate; }
   void dumpRegFile(std::ostream &outs) const;
   //
-  std::vector<Instruction> lookupBB(paddress_t addr);
+  std::vector<Instruction> &lookupBB(paddress_t addr);
+  CallInfo *lookupBBLinked(paddress_t addr);
+
   static bool is_terminate(InstrId id);
 };
 } // namespace sim

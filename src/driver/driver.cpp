@@ -59,9 +59,16 @@ void Driver::run() {
     }
 #endif
 
+#if 1
+    auto fn = lookupBBLinked(m_hart.pc);
+    m_instCounter += m_linkedBBChache[m_hart.pc].size();
+    fn->exec(fn);
+
+#else
+
     // interpret
-    auto &&BB = lookupBB(m_hart.pc);
-    for (Instruction &instr : BB) {
+    const auto BB = lookupBB(m_hart.pc);
+    for (const Instruction &instr : BB) {
       // save old state
       paddress_t tmp_pc = m_hart.pc;
 
@@ -92,6 +99,7 @@ void Driver::run() {
       }
       m_instCounter++;
     }
+#endif
     //
   }
   std::cout << "Regs: " << std::endl;
@@ -105,11 +113,39 @@ void Driver::dumpRegFile(std::ostream &outs) const {
   }
 }
 
-std::vector<Instruction> Driver::lookupBB(paddress_t addr) {
+void foo(CallInfo *a) { (void*)a; }
+
+CallInfo* Driver::lookupBBLinked(paddress_t addr) {
+  if (!m_linkedBBChache.count(addr)) {
+
+    const std::vector<Instruction> &BB = lookupBB(m_hart.pc);
+    auto endFn = []() {};
+
+    m_linkedBBChache[addr].resize(BB.size() + 1);
+
+    size_t prev_fn_id = BB.size();
+    for (size_t i = 0; i < BB.size(); ++i) {
+      m_linkedBBChache[addr][i].instr = &BB[i];
+      m_linkedBBChache[addr][i].hart = &m_hart;
+      m_linkedBBChache[addr][i].exec = m_executor.m_exec_instr[static_cast<uint8_t>(BB[i].id)];
+    }
+
+    CallInfo end {};
+    end.exec = foo;
+    m_linkedBBChache[addr][BB.size()] = end;
+  }
+
+
+
+  return &m_linkedBBChache[addr].at(0);
+}
+
+std::vector<Instruction> &Driver::lookupBB(paddress_t addr) {
   if (!m_nativeBBChache.count(addr)) {
     Instruction instr;
     paddress_t cur_addr = addr;
     std::vector<Instruction> res;
+    res.reserve(20);
     do {
       word_t cur_word = m_hart.mmu().read<word_t>(cur_addr);
       instr = m_decoder.decode(cur_word);
