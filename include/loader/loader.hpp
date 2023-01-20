@@ -1,5 +1,5 @@
 #ifndef ELF_LOADER_H
-#define ELF_LOADER
+#define ELF_LOADER_H
 
 #include "memory/memory.hpp"
 #include "support.hpp"
