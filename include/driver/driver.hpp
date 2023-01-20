@@ -7,6 +7,7 @@
 #include "loader/loader.hpp"
 #include "memory/memory.hpp"
 #include "support.hpp"
+#include "jit/rvjit.hpp"
 
 #include <fstream>
 
@@ -22,6 +23,12 @@ class Driver final {
   Executor m_executor{};
   Decoder m_decoder{};
   //
+  // optimizations
+  // bt
+  RVJit m_jit;
+  // <function, translated instructions>
+  std::unordered_map<paddress_t, std::pair<RVJit::FunctionTy, size_t>> m_translated;
+  // cache line block
   std::unordered_map<paddress_t, std::vector<Instruction>> m_nativeBBChache;
   // TODO: impl log class
   std::ofstream trace_out;

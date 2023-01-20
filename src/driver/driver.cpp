@@ -1,5 +1,7 @@
 #include "driver/driver.hpp"
 #include "utils/compiler.hpp"
+#include <iomanip>
+#include <sstream>
 
 namespace sim {
 
@@ -15,10 +17,49 @@ Driver::Driver(const std::string &path, const std::string &path_trace) {
   m_hart.pc = loader.get_entry();
 }
 
+std::string RegfileStr(const Hart &hart) {
+  std::stringstream ss{};
+  ss << std::setfill('0');
+  constexpr std::size_t lineNum = 8;
+
+  for (std::size_t i = 0; i < lineNum; ++i) {
+    for (std::size_t j = 0; j < 32 / lineNum; ++j) {
+      auto regIdx = j * lineNum + i;
+      auto &reg = hart.regs[regIdx];
+      ss << "  [" << std::dec << std::setw(2) << regIdx << "] ";
+      ss << "0x" << std::hex << std::setw(sizeof(reg) * 2) << reg;
+    }
+    ss << std::endl;
+  }
+
+  return ss.str();
+}
+
 void Driver::run() {
   m_instCounter = 0;
 
   while (!is_terminate()) {
+    // try bt
+#if 0
+    auto &&translatedIt = m_translated.find(m_hart.pc);
+    if (translatedIt != m_translated.end()) {
+      m_instCounter += translatedIt->second.second;
+      translatedIt->second.first();
+      continue;
+    } else if (m_nativeBBChache.count(m_hart.pc)) {
+      auto &&BB = m_nativeBBChache[m_hart.pc];
+      if (BB.size() > 3) {
+        auto fn = m_jit.translate_2(BB.begin(), BB.end(), &m_hart);
+        if (fn) {
+          m_translated[m_hart.pc] = std::make_pair(fn, m_jit.translated());
+          fn();
+          continue;
+        }
+      }
+    }
+#endif
+
+    // interpret
     auto &&BB = lookupBB(m_hart.pc);
     for (Instruction &instr : BB) {
       // save old state
@@ -45,7 +86,7 @@ void Driver::run() {
 
         // it is assumed that the result is always rd.
         if (instr.rd != 0) {
-          trace_out << "x" << instr.rd << " = 0x" << std::hex
+          trace_out << "x" << std::dec << (int)instr.rd << " = 0x" << std::hex
                     << m_hart.getReg(instr.rd) << '\n';
         }
       }
@@ -53,6 +94,8 @@ void Driver::run() {
     }
     //
   }
+  std::cout << "Regs: " << std::endl;
+  std::cout << RegfileStr(m_hart) << std::endl;
 }
 
 void Driver::dumpRegFile(std::ostream &outs) const {
@@ -91,9 +134,6 @@ bool Driver::is_terminate(InstrId id) {
   case InstrId::ECALL:
   case InstrId::JAL:
   case InstrId::JALR:
-  // case InstrId::PAUSE:
-  // case InstrId::SBREAK:
-  // case InstrId::SCALL:
     return true;
     break;
   default:
