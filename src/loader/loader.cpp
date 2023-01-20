@@ -27,8 +27,10 @@ void ElfLoader::load(Memory &memory) {
     size_t filesz = static_cast<size_t>(segment->get_file_size());
     size_t memsz = static_cast<size_t>(segment->get_memory_size());
     //
-    memory.writeRaw(
-        address, reinterpret_cast<const byte_t *>(segment->get_data()), filesz);
+    if (filesz)
+      memory.writeRaw(address,
+                      reinterpret_cast<const byte_t *>(segment->get_data()),
+                      filesz);
   }
 }
 

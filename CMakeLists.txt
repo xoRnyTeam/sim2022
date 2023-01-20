@@ -24,7 +24,7 @@ foreach(TARGET IN LISTS TARGETS)
   target_include_directories(${TARGET} PRIVATE ${CMAKE_SOURCE_DIR}/3rd_party/asmjit/src)
 
   # target_compile_options(${TARGET} PRIVATE -Wall -Wextra -Wpedantic)
-  apply_compiler_flags(${TARGET} PRIVATE)
+  # apply_compiler_flags(${TARGET} PRIVATE)
   target_compile_features(${TARGET} PRIVATE cxx_std_20)
 endforeach()
 
