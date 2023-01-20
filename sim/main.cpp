@@ -20,7 +20,7 @@ int main(int argc, char **argv) {
   driver.run();
   double elapsed = timer.elapsed<timer::Timer::millisecs>();
   std::cout << elapsed << " millisecs\n";
-  std::cout << driver.getInstCounter() << " instractions\n";
+  std::cout << driver.getInstCounter() << " instructions\n";
   std::cout << driver.getInstCounter() / elapsed * 1e+3 / 1e+6 << " MIPS"
             << std::endl;
   return 0;
