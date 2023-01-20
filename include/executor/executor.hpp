@@ -1,8 +1,8 @@
 #ifndef EXEC_HPP
 #define EXEC_HPP
 
-#include "isa/instr.hpp"
 #include "hart/hart.hpp"
+#include "isa/instr.hpp"
 //
 #include <array>
 #include <functional>
@@ -11,19 +11,25 @@
 
 namespace sim {
 
+struct CallInfo final {
+  void (*exec)(CallInfo *) = nullptr;
+  const Instruction *instr = nullptr;
+  Hart *hart = nullptr;
+};
+
 class Executor final {
+public:
   //
-  std::array<std::function<void(Instruction &instr, Hart &hart)>, 0xFF>
+  std::array<void(*)(CallInfo *), 0xFF>
       m_exec_instr{};
   //
-public:
   Executor();
   Executor(const Executor &) = delete;
   Executor(Executor &&) = delete;
   Executor &operator=(const Executor &) = delete;
   Executor &operator=(Executor &&) = delete;
   //
-  void exec(Instruction &instr, Hart &hart) const;
+  void exec(const Instruction &instr, Hart &hart) const;
 };
 
 } // namespace sim
