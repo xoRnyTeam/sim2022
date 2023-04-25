@@ -2,6 +2,7 @@
 #include "executor/executor.hpp"
 
 #include "isa/instr.hpp"
+#include "glib/SEngine.hpp"
 
 #include <bit>
 
@@ -9,6 +10,7 @@ namespace sim {
 
 void Executor::exec(Instruction &instr, Hart &hart) const {
   m_exec_instr[static_cast<uint8_t>(instr.id)](instr, hart);
+  hart.setReg(0, 0);
 }
 
 void exec_ADD(Instruction &instr, Hart &hart) {
@@ -221,6 +223,73 @@ void exec_XORI(Instruction &instr, Hart &hart) {
   hart.addToPC(4);
 } //!
 
+void exec_GRAPH_INIT(Instruction &instr, Hart &hart) {
+  //           a0             , a1
+  sEngine_init(hart.getReg(10), hart.getReg(11));
+}
+void exec_GRAPH_PUT_PIXEL(Instruction &instr, Hart &hart) {
+  //        a0             , a1             , a2
+  put_pixel(hart.getReg(10), hart.getReg(11), hart.getReg(12));
+}
+void exec_GRAPH_WINDOW_IS_OPEN(Instruction &instr, Hart &hart) {
+  hart.setReg(15, sEngine_windowIsOpen());
+}
+void exec_GRAPH_TIME(Instruction &instr, Hart &hart) {
+  hart.setReg(15, get_time_milliseconds());
+}
+void exec_GRAPH_FLUSH(Instruction &instr, Hart &hart) {
+  flush();
+}
+void exec_GRAPH_RAND(Instruction &instr, Hart &hart) {
+  hart.setReg(15, sEngine_rand());
+}
+void exec_GRAPH_CLEAR(Instruction &instr, Hart &hart) {
+  sEngine_clear();
+}
+
+void exec_SRAI(Instruction &instr, Hart &hart) {
+  // arifmetic shifts on the value in register rs1 by the shift amount held in the lower 5 bits of register rs2
+  hart.setReg(instr.rd, ((int)hart.getReg(instr.rs1)) >> (instr.imm & 0b011111));
+  hart.addToPC(4);
+} //!
+
+void exec_SRLI(Instruction &instr, Hart &hart) {
+  //shifts on the value in register rs1 by the shift amount held in the lower 5 bits of register rs2
+  hart.setReg(instr.rd, hart.getReg(instr.rs1) >> (instr.imm & 0b011111));
+  hart.addToPC(4);
+} //!
+
+void exec_SLLI(Instruction &instr, Hart &hart) {
+  //shifts on the value in register rs1 by the shift amount held in the lower 5 bits of register rs2
+  hart.setReg(instr.rd, hart.getReg(instr.rs1) << (instr.imm & 0b011111));
+  hart.addToPC(4);
+} //!
+
+void exec_DIV(Instruction &instr, Hart &hart) {
+  hart.setReg(instr.rd, (int)hart.getReg(instr.rs1) / (int)hart.getReg(instr.rs2));
+  hart.addToPC(4);
+} //!
+
+void exec_DIVU(Instruction &instr, Hart &hart) {
+  hart.setReg(instr.rd, hart.getReg(instr.rs1) / hart.getReg(instr.rs2));
+  hart.addToPC(4);
+} //!
+
+void exec_REM(Instruction &instr, Hart &hart) {
+  hart.setReg(instr.rd, (int)hart.getReg(instr.rs1) % (int)hart.getReg(instr.rs2));
+  hart.addToPC(4);
+} //!
+
+void exec_REMU(Instruction &instr, Hart &hart) {
+  hart.setReg(instr.rd, hart.getReg(instr.rs1) % hart.getReg(instr.rs2));
+  hart.addToPC(4);
+} //!
+
+void exec_MUL(Instruction &instr, Hart &hart) {
+  hart.setReg(instr.rd, hart.getReg(instr.rs1) * hart.getReg(instr.rs2));
+  hart.addToPC(4);
+} //!
+
 Executor::Executor() {
   m_exec_instr[static_cast<uint8_t>(InstrId::ADD)] = exec_ADD;
   m_exec_instr[static_cast<uint8_t>(InstrId::ADDI)] = exec_ADDI;
@@ -251,6 +320,21 @@ Executor::Executor() {
   m_exec_instr[static_cast<uint8_t>(InstrId::SB)] = exec_SB;
   // m_exec_instr[static_cast<uint8_t>(InstrId::SBREAK)] = exec_SBREAK;
   // m_exec_instr[static_cast<uint8_t>(InstrId::SCALL)] = exec_SCALL;
+  m_exec_instr[static_cast<uint8_t>(InstrId::GRAPH_INIT)] = exec_GRAPH_INIT;
+  m_exec_instr[static_cast<uint8_t>(InstrId::GRAPH_PUT_PIXEL)] = exec_GRAPH_PUT_PIXEL;
+  m_exec_instr[static_cast<uint8_t>(InstrId::GRAPH_WINDOW_IS_OPEN)] = exec_GRAPH_WINDOW_IS_OPEN;
+  m_exec_instr[static_cast<uint8_t>(InstrId::GRAPH_TIME)] = exec_GRAPH_TIME;
+  m_exec_instr[static_cast<uint8_t>(InstrId::GRAPH_FLUSH)] = exec_GRAPH_FLUSH;
+  m_exec_instr[static_cast<uint8_t>(InstrId::GRAPH_RAND)] = exec_GRAPH_RAND;
+  m_exec_instr[static_cast<uint8_t>(InstrId::GRAPH_CLEAR)] = exec_GRAPH_CLEAR;
+  m_exec_instr[static_cast<uint8_t>(InstrId::MUL)] = exec_MUL;
+  m_exec_instr[static_cast<uint8_t>(InstrId::DIV)] = exec_DIV;
+  m_exec_instr[static_cast<uint8_t>(InstrId::DIVU)] = exec_DIVU;
+  m_exec_instr[static_cast<uint8_t>(InstrId::REM)] = exec_REM;
+  m_exec_instr[static_cast<uint8_t>(InstrId::REMU)] = exec_REMU;
+  m_exec_instr[static_cast<uint8_t>(InstrId::SLLI)] = exec_SLLI;
+  m_exec_instr[static_cast<uint8_t>(InstrId::SRAI)] = exec_SRAI;
+  m_exec_instr[static_cast<uint8_t>(InstrId::SRLI)] = exec_SRLI;
   m_exec_instr[static_cast<uint8_t>(InstrId::SH)] = exec_SH;
   m_exec_instr[static_cast<uint8_t>(InstrId::SLL)] = exec_SLL;
   m_exec_instr[static_cast<uint8_t>(InstrId::SLT)] = exec_SLT;
