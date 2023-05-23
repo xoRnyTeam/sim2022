@@ -1,6 +1,16 @@
 #include <stdint.h>
 
+#define EPS 0.1
+
+#define GREEN 0, 255, 0
+#define BLACK 0, 0, 0
+
+#define RECT_SIZE 1.0, 1.0
+
+enum AppParams { APP_WIDTH = 800, APP_HEIGHT = 800 };
+
 /**
+ * 
  * @brief create window
  *
  * @param width - width of the window in pixels

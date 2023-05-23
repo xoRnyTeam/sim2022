@@ -6,11 +6,15 @@
 #include <memory>
 #include <vector>
 
-std::unique_ptr<sf::RenderWindow> g_window;
+namespace graph_impl {
+//! NOTE: imagine here SfmlImpl class realziation
+static sf::RenderWindow window;
+static sf::Image buffer;
+static sf::Texture texture;
+static sf::Sprite sprite;
 //
-sf::Image g_image;
-uint32_t g_width, g_heigth;
-//
+} // namespace graph_impl
+
 std::chrono::time_point<std::chrono::high_resolution_clock> g_timer =
     std::chrono::high_resolution_clock::now();
 
@@ -20,39 +24,36 @@ uint8_t unpack_4ui8_b(uint32_t rgba) { return (rgba & 0x0000FF00) >> 8; }
 uint8_t unpack_4ui8_a(uint32_t rgba) { return (rgba & 0x000000FF); }
 
 extern "C" void gl_graph_init(uint32_t width, uint32_t heigth) {
-  g_width = width;
-  g_heigth = heigth;
-  g_window = std::make_unique<sf::RenderWindow>(
-      sf::VideoMode(g_width, g_heigth), "Custom Backend");
-  g_image.create(g_width, g_heigth);
-
-  sf::View view(sf::FloatRect(0.f, 0.f, g_width, g_heigth));
+  uint32_t h = AppParams::APP_HEIGHT, w = AppParams::APP_WIDTH;
+  //
+  graph_impl::window.create(sf::VideoMode(w, h), "Game of Life");
+  graph_impl::buffer.create(w, h, sf::Color(BLACK));
 }
 
 extern "C" int gl_window_is_open() {
   sf::Event event;
-  while (g_window->pollEvent(event)) {
+  while (graph_impl::window.pollEvent(event)) {
     if (event.type == sf::Event::Closed)
-      g_window->close();
+      graph_impl::window.close();
   }
-  return g_window->isOpen();
+  return graph_impl::window.isOpen();
 }
 
 extern "C" void gl_set_pixel(uint32_t x, uint32_t y, uint32_t rgba) {
   sf::Color color{unpack_4ui8_r(rgba), unpack_4ui8_g(rgba), unpack_4ui8_b(rgba),
                   unpack_4ui8_a(rgba)};
-  g_image.setPixel(x, y, color);
+  graph_impl::buffer.setPixel(x, y, color);
 }
 
 extern "C" void gl_flush() {
   sf::Texture texture;
-  texture.loadFromImage(g_image);
+  texture.loadFromImage(graph_impl::buffer);
 
   sf::Sprite sprite(texture);
 
-  g_window->clear();
-  g_window->draw(sprite);
-  g_window->display();
+  graph_impl::window.clear();
+  graph_impl::window.draw(sprite);
+  graph_impl::window.display();
 }
 
 extern "C" long long gl_get_msecs() {
@@ -64,4 +65,4 @@ extern "C" long long gl_get_msecs() {
 // DLC
 extern "C" int gl_rand() { return rand(); }
 
-extern "C" void gl_clear() { g_window->clear(sf::Color::Black); }
+extern "C" void gl_clear() { graph_impl::window.clear(sf::Color::Black); }
