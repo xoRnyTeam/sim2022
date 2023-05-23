@@ -11,25 +11,19 @@
 
 namespace sim {
 
-struct CallInfo final {
-  void (*exec)(CallInfo *) = nullptr;
-  const Instruction *instr = nullptr;
-  Hart *hart = nullptr;
-};
-
 class Executor final {
-public:
   //
-  std::array<void(*)(CallInfo *), 0xFF>
+  std::array<std::function<void(Instruction &instr, Hart &hart)>, 0xFF>
       m_exec_instr{};
   //
+public:
   Executor();
   Executor(const Executor &) = delete;
   Executor(Executor &&) = delete;
   Executor &operator=(const Executor &) = delete;
   Executor &operator=(Executor &&) = delete;
   //
-  void exec(const Instruction &instr, Hart &hart) const;
+  void exec(Instruction &instr, Hart &hart) const;
 };
 
 } // namespace sim

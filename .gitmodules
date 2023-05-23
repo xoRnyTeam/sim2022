@@ -10,3 +10,6 @@
 [submodule "3rd_party/asmjit"]
 	path = 3rd_party/asmjit
 	url = git@github.com:asmjit/asmjit.git
+[submodule "asmjit"]
+	path = asmjit
+	url = git@github.com:asmjit/asmjit.git

@@ -10,7 +10,6 @@
 #include "support.hpp"
 
 #include <fstream>
-#include <functional>
 
 namespace sim {
 
@@ -32,8 +31,6 @@ class Driver final {
       m_translated;
   // cache line block
   std::unordered_map<paddress_t, std::vector<Instruction>> m_nativeBBChache;
-  std::unordered_map<paddress_t, std::vector<CallInfo>>
-      m_linkedBBChache;
   // TODO: impl log class
   std::ofstream trace_out;
   //
@@ -58,9 +55,7 @@ private:
   bool is_terminate() { return m_hart.terminate; }
   void dumpRegFile(std::ostream &outs) const;
   //
-  std::vector<Instruction> &lookupBB(paddress_t addr);
-  CallInfo *lookupBBLinked(paddress_t addr);
-
+  std::vector<Instruction> lookupBB(paddress_t addr);
   static bool is_terminate(InstrId id);
 };
 } // namespace sim
